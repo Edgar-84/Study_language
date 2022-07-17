@@ -1,0 +1,16 @@
+{% extends "cards/base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<ul>
+    {% for p in posts %}
+    <li>
+        <h2>{{ p.user }}</h2>
+        <p>{{ p.title }}</p>
+        <hr>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
