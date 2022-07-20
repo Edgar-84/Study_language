@@ -21,12 +21,7 @@ venv
 prod_settings.py
 local_settings.py
 
-**/migrations/**
-!**/migrations
-!**/migrations/__init__.py
-*backend/*/migrations/*
-!*backend/*/migrations
-!*backend/*/migrations/__init__.py
+
 
 __pycache__/
 */__pycache__/
@@ -47,3 +42,4 @@ make.bat
 Makefile
 
 doc-dev
+db.sqlite3
