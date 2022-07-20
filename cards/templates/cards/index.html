@@ -1,16 +1,12 @@
 {% extends "cards/base.html" %}
 
 {% block content %}
-<h1>{{ title }}</h1>
 
-<ul>
-    {% for p in posts %}
-    <li>
-        <h2>{{ p.user }}</h2>
-        <p>{{ p.title }}</p>
-        <hr>
-    </li>
-    {% endfor %}
-</ul>
-
+<div class="features">
+    <h1>{{ title }}</h1>
+    <p><h4>Ваши списки слов:</h4></p>
+        {% for c in cats %}
+            <p><li><a href="{{ c.get_absolute_url }}">{{ c.title }}</a></li></p>
+        {% endfor %}
+</div>
 {% endblock %}

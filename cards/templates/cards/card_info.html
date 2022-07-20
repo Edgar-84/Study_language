@@ -1,0 +1,16 @@
+{% extends "cards/base.html" %}
+
+{% block content %}
+<div class="features">
+    <h1>{{ title }}</h1>
+    {% if card.photo %}
+    <p><img src="{{ card.photo.url }}"></p>
+    {% endif %}
+
+    <p>Слово: {{ card.title_native_language }}</p>
+    <p>Перевод: {{ card.translate_studied_language }}</p>
+    {% if card.usage_example %}
+    <p>Пример применения: {{ card.usage_example }}</p>
+    {% endif %}
+</div>
+{% endblock %}

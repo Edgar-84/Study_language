@@ -1,0 +1,11 @@
+{% extends "cards/base.html" %}
+
+{% block content %}
+<div class="features">
+    <h1>{{ title }}</h1>
+    {% for w in cards %}
+        <p><li><a href="{{ w.get_absolute_url }}">Слово: {{ w.title_native_language }}</a></li></p>
+        <p>Перевод: {{ w.translate_studied_language }}</p>
+    {% endfor %}
+</div>
+{% endblock %}
