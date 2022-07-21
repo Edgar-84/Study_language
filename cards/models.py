@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.urls import reverse
+from slugify import slugify
 
 
 class Category(models.Model):
@@ -10,6 +11,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        return super(Category, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_id': self.pk})
@@ -21,7 +26,7 @@ class Category(models.Model):
 
 
 class Card(models.Model):
-    user = models.ForeignKey(User, related_name="cards_created", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="cards_created", on_delete=models.CASCADE, blank=True)
     category = models.ForeignKey(Category, verbose_name="category",
                                  related_name="category_created", on_delete=models.CASCADE)
     title_native_language = models.CharField(max_length=255)
@@ -35,6 +40,10 @@ class Card(models.Model):
 
     def __str__(self):
         return self.title_native_language
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title_native_language)
+        return super(Card, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('card', kwargs={'card_slug': self.slug})
