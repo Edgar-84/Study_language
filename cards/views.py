@@ -1,50 +1,72 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView
 
+from .forms import *
 from .models import *
+from .utils import *
 
 
-menu = [{"title": "Главная", "url_name": "home"},
-        {"title": "О сайте", "url_name": "about"},
-        {"title": "Начать занятие", "url_name": "start_lesson"},
-        {"title": "Обратная связь", "url_name": "contact"},
-        {"title": "Войти", "url_name": "login"}
-]
+class CardsHome(DataMixin, ListView):
+    model = Category
+    template_name = "cards/index.html"
+    context_object_name = 'cats'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Главная страница")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def get_queryset(self):
+        return Category.objects.filter(user=self.request.user)
 
 
-def index(request):
-    cats = Category.objects.filter(user=request.user)
+class ShowCategory(DataMixin, ListView):
+    model = Card
+    template_name = "cards/show_cards.html"
+    context_object_name = "cards"
+    allow_empty = False
 
-    context = {
-        'cats': cats,
-        'title': 'Главная страница',
-        'menu': menu
-    }
-    return render(request, "cards/index.html", context=context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Слова из списка",
+                                            name=(Category.objects.filter(slug=self.kwargs["cat_slug"]))[0].title)
+        return dict(list(context.items()) + list(common_date.items()))
 
-
-def show_category(request, cat_id):
-    words = Card.objects.filter(category=cat_id)
-    cats = Category.objects.filter(user=request.user)
-
-    context = {
-        'cats': cats,
-        'cards': words,
-        'title': 'Отобажение слов из выбранного списка',
-        'menu': menu
-    }
-    return render(request, "cards/show_cards.html", context=context)
+    def get_queryset(self):
+        return Card.objects.filter(category__slug=self.kwargs["cat_slug"])
 
 
-def show_card(request, card_slug):
-    card = get_object_or_404(Card, slug=card_slug)
+class ShowCard(DataMixin, DetailView):
+    model = Card
+    template_name = "cards/card_info.html"
+    slug_url_kwarg = "card_slug"
+    context_object_name = "card"
 
-    context = {
-        'card': card,
-        'menu': menu,
-        'title': card.title_native_language,
-    }
-    return render(request, 'cards/card_info.html', context=context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Карточка")
+        return dict(list(context.items()) + list(common_date.items()))
+
+
+class AddCard(DataMixin, LoginRequiredMixin, CreateView):
+    form_class = AddCardForm
+    template_name = "cards/addcard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Добавление карточки")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 def about(request):
