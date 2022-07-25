@@ -7,7 +7,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'title')
     list_filter = ('user',)
     search_fields = ('user',)
-    prepopulated_fields = {'slug': ('title',)}
+    prepopulated_fields = {'slug': ('title', 'user')}
 
 
 @admin.register(Card)

@@ -7,13 +7,14 @@ from slugify import slugify
 class Category(models.Model):
     user = models.ForeignKey(User, related_name="category_created", on_delete=models.CASCADE)
     title = models.CharField(max_length=100, db_index=True)
-    slug = models.SlugField(max_length=255, db_index=True, verbose_name="URL")
+    slug = models.SlugField(max_length=255, db_index=True, verbose_name="URL", null=False, unique=True)
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        if not self.slug:
+            self.slug = slugify(self.title, self.user_id)
         return super(Category, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
