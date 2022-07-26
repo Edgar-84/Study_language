@@ -4,7 +4,7 @@ from .models import Card, Category
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'title')
+    list_display = ('id', 'user', 'title', 'time_create', 'time_update')
     list_filter = ('user',)
     search_fields = ('user',)
     prepopulated_fields = {'slug': ('title', 'user')}
@@ -21,5 +21,5 @@ class CardAdmin(admin.ModelAdmin):
     date_hierarchy = 'time_create'
     ordering = ('published',)
     list_editable = ('published',)
-    prepopulated_fields = {'slug': ('title_native_language',)}
+    prepopulated_fields = {'slug': ('title_native_language', 'user')}
 

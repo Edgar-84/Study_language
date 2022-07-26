@@ -10,7 +10,10 @@ menu = [{"title": "Главная", "url_name": "home"},
 class DataMixin:
     def get_user_context(self, **kwargs):
         context = kwargs
-        cats = Category.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            cats = Category.objects.filter(user=self.request.user)
+        else:
+            cats = Category.objects.all()
         context['menu'] = menu
         context['cats'] = cats
         return context
