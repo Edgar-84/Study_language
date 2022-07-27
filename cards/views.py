@@ -29,7 +29,7 @@ class ShowCategory(DataMixin, ListView):
     model = Card
     template_name = "cards/show_cards.html"
     context_object_name = "cards"
-    allow_empty = True                 #TODO сделать переход на создание слова если пусто
+    allow_empty = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,9 +39,6 @@ class ShowCategory(DataMixin, ListView):
 
     def get_queryset(self):
         return Card.objects.filter(category__slug=self.kwargs["cat_slug"]).order_by('-time_create')
-
-    # def get_ordering(self):
-    #     ordering = self.request.GET.get()
 
 
 class ShowCard(DataMixin, DetailView):
@@ -102,6 +99,20 @@ class LoginUser(DataMixin, LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
+
+
+class AddCategory(DataMixin, LoginRequiredMixin, CreateView):
+    form_class = AddCategoryForm
+    template_name = "cards/addcategory.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Создание списка")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 def logout_user(request):
