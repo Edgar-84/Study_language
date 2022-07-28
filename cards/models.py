@@ -17,6 +17,7 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = '-'.join((slugify(self.title), slugify(str(self.user.username))))
+
         return super(Category, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -46,7 +47,10 @@ class Card(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = '-'.join((slugify(self.title_native_language), slugify(str(self.user.username))))
+            self.slug = '-'.join((slugify(str(self.user.username)),
+                                  slugify(self.title_native_language),
+                                  slugify(str(self.category))))
+
         return super(Card, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
