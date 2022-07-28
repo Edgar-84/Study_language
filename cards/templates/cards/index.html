@@ -8,5 +8,6 @@
         {% for c in cats %}
             <p><li><a href="{{ c.get_absolute_url }}">{{ c.title }}</a></li></p>
         {% endfor %}
+        <a href="{% url 'add_category' %}"><li>Создать список</li></a>
 </div>
 {% endblock %}
