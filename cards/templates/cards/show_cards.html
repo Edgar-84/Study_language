@@ -7,6 +7,6 @@
         <p><li><a href="{{ w.get_absolute_url }}">Слово: {{ w.title_native_language }}</a></li></p>
         <p>Перевод: {{ w.translate_studied_language }}</p>
     {% endfor %}
-    <a href="{% url 'add_card' %}"><li>Добавить карточку</li></a>
+    <a href="{% url 'add_card' %}"><li><button class="btn btn-info">Добавить карточку</button></li></a>
 </div>
 {% endblock %}
