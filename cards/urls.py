@@ -12,6 +12,6 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('category/<slug:cat_slug>/', ShowCategory.as_view(), name='category'),
-    path('addcard/', AddCard.as_view(), name='add_card'),
+    path('addcard/<slug:cat_id>/', AddCard.as_view(), name='add_card'),
     path('addcategory/', AddCategory.as_view(), name='add_category'),
 ]
