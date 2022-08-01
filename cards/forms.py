@@ -30,14 +30,12 @@ class AddCategoryForm(forms.ModelForm):
 class AddCardForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-
+        self.cat_id = kwargs.pop("cat_id")
         super(AddCardForm, self).__init__(*args, **kwargs)
-        self.fields['category'].empty_label = "Список не выбран"
-        self.fields['category'].queryset = Category.objects.filter(user=self.request.user)
 
     class Meta:
         model = Card
-        fields = ['category', 'title_native_language', 'translate_studied_language',
+        fields = ['title_native_language', 'translate_studied_language',
                   'usage_example', 'photo']
         widgets = {
             'usage_example': forms.Textarea(attrs={'cools': 60, 'rows': 10}),
@@ -46,8 +44,8 @@ class AddCardForm(forms.ModelForm):
     def clean_title_native_language(self):
         title = self.cleaned_data['title_native_language']
         list_titles = Card.objects.filter(user=self.request.user,
-                                          category=self.cleaned_data['category'])\
-            .values_list('title_native_language', flat=True).distinct()
+                                          category=self.cat_id).\
+            values_list('title_native_language', flat=True).distinct()
 
         if title in list_titles:
             raise ValidationError(("Карточка '%(value)s' уже есть в списке!"),

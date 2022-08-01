@@ -34,7 +34,8 @@ class ShowCategory(DataMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         common_date = self.get_user_context(title="Слова из списка",
-                                            name=(Category.objects.filter(slug=self.kwargs["cat_slug"]))[0].title)
+                                            category_object=Category.objects.get(slug=self.kwargs["cat_slug"]))
+
         return dict(list(context.items()) + list(common_date.items()))
 
     def get_queryset(self):
@@ -59,16 +60,19 @@ class AddCard(DataMixin, LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        common_date = self.get_user_context(title="Добавление карточки")
+        common_date = self.get_user_context(title="Добавление карточки",
+                                            cat_id=int(self.request.path.split('/')[-2]))
         return dict(list(context.items()) + list(common_date.items()))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({'request': self.request})
+        kwargs.update({'cat_id': int(self.request.path.split('/')[-2])})
         return kwargs
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        form.instance.category = Category.objects.get(id=int(self.request.path.split('/')[-2]))
         return super().form_valid(form)
 
 

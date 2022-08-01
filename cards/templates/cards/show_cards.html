@@ -2,12 +2,13 @@
 
 {% block content %}
 <div class="features">
-    <h1>{{ name }}</h1>
+    <h1>{{ category_object.title }}</h1>
+    <h6>Всего: {{ cards.count }} карточек</h6>
+
     {% for w in cards %}
         <p><li><a href="{{ w.get_absolute_url }}">Слово: {{ w.title_native_language }}</a></li></p>
         <p>Перевод: {{ w.translate_studied_language }}</p>
     {% endfor %}
     <a href="{% url 'add_card' category_object.id %}"><li><button class="btn btn-info">Добавить карточку</button></li></a>
-
 </div>
 {% endblock %}
