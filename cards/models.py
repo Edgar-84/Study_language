@@ -27,6 +27,7 @@ class Category(models.Model):
         verbose_name = "Category"
         verbose_name_plural = "Categories"
         ordering = ['-time_update']
+        unique_together = ['title', 'user']
 
 
 class Card(models.Model):
@@ -60,3 +61,4 @@ class Card(models.Model):
         verbose_name = "Card"
         verbose_name_plural = "Cards"
         ordering = ['time_create', 'title_native_language']
+        unique_together = (('title_native_language', 'user'),)
