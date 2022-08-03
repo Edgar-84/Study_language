@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from .forms import *
 from .utils import *
@@ -72,6 +72,7 @@ class AddCard(DataMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        print(int(self.request.path.split('/')[-2]))
         form.instance.category = Category.objects.get(id=int(self.request.path.split('/')[-2]))
         return super().form_valid(form)
 
@@ -121,6 +122,23 @@ class AddCategory(DataMixin, LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({'request': self.request})
+        return kwargs
+
+
+class CardsUpdateView(DataMixin, UpdateView):
+    model = Card
+    form_class = EditCardForm
+    template_name = "cards/card_edit.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Редактирование карточки")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'request': self.request})
+        kwargs.update({'card_id': int(self.request.path.split('/')[-3])})
         return kwargs
 
 

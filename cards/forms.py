@@ -48,7 +48,37 @@ class AddCardForm(forms.ModelForm):
             values_list('title_native_language', flat=True).distinct()
 
         if title in list_titles:
-            raise ValidationError(("Карточка '%(value)s' уже есть в списке!"),
+            raise ValidationError(("Карточка с именем '%(value)s' уже есть в списке!"),
+                                  code='invalid',
+                                  params={'value': title})
+        return title
+
+
+class EditCardForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.card_id = kwargs.pop("card_id")
+        super(EditCardForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = Card
+        fields = ['title_native_language', 'translate_studied_language',
+                  'usage_example', 'photo']
+        widgets = {
+            'usage_example': forms.Textarea(attrs={'cools': 60, 'rows': 10}),
+        }
+
+    def clean_title_native_language(self):
+        title = self.cleaned_data['title_native_language']
+        card_object = Card.objects.filter(id=self.card_id)
+        for_compare_id = Card.objects.filter(title_native_language=title)[0].id
+
+        list_titles = Card.objects.filter(user=self.request.user,
+                                          category=card_object[0].category_id).\
+            values_list('title_native_language', flat=True).distinct()
+
+        if (title in list_titles) and (self.card_id != for_compare_id):
+            raise ValidationError(("Карточка с именем '%(value)s' уже есть в списке!"),
                                   code='invalid',
                                   params={'value': title})
         return title
