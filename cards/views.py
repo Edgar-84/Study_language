@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .forms import *
 from .utils import *
@@ -72,9 +72,57 @@ class AddCard(DataMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        print(int(self.request.path.split('/')[-2]))
         form.instance.category = Category.objects.get(id=int(self.request.path.split('/')[-2]))
+        print('form valid')
         return super().form_valid(form)
+
+
+class CardUpdateView(DataMixin, LoginRequiredMixin, UpdateView):
+    model = Card
+    form_class = EditCardForm
+    template_name = "cards/card_edit.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Редактирование карточки")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'request': self.request})
+        kwargs.update({'card_id': int(self.request.path.split('/')[-3])})
+        return kwargs
+
+
+class CardDeleteView(DataMixin, LoginRequiredMixin, DeleteView):
+    model = Card
+    template_name = 'cards/delete_card.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Удаление карточки",
+                                            card_name=Card.objects.get(id=int(self.request.path.split('/')[-3])))
+        return dict(list(context.items()) + list(common_date.items()))
+
+
+class AddCategory(DataMixin, LoginRequiredMixin, CreateView):
+    form_class = AddCategoryForm
+    template_name = "cards/addcategory.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Создание списка")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -104,42 +152,6 @@ class LoginUser(DataMixin, LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
-
-
-class AddCategory(DataMixin, LoginRequiredMixin, CreateView):
-    form_class = AddCategoryForm
-    template_name = "cards/addcategory.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        common_date = self.get_user_context(title="Создание списка")
-        return dict(list(context.items()) + list(common_date.items()))
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'request': self.request})
-        return kwargs
-
-
-class CardsUpdateView(DataMixin, UpdateView):
-    model = Card
-    form_class = EditCardForm
-    template_name = "cards/card_edit.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        common_date = self.get_user_context(title="Редактирование карточки")
-        return dict(list(context.items()) + list(common_date.items()))
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'request': self.request})
-        kwargs.update({'card_id': int(self.request.path.split('/')[-3])})
-        return kwargs
 
 
 def logout_user(request):

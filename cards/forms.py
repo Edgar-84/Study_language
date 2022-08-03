@@ -44,7 +44,7 @@ class AddCardForm(forms.ModelForm):
     def clean_title_native_language(self):
         title = self.cleaned_data['title_native_language']
         list_titles = Card.objects.filter(user=self.request.user,
-                                          category=self.cat_id).\
+                                          category=self.cat_id). \
             values_list('title_native_language', flat=True).distinct()
 
         if title in list_titles:
@@ -71,10 +71,15 @@ class EditCardForm(forms.ModelForm):
     def clean_title_native_language(self):
         title = self.cleaned_data['title_native_language']
         card_object = Card.objects.filter(id=self.card_id)
-        for_compare_id = Card.objects.filter(title_native_language=title)[0].id
+        for_compare_id = Card.objects.filter(title_native_language=title,
+                                             category=card_object[0].category_id)
+        if len(for_compare_id) == 0:
+            for_compare_id = None
+        else:
+            for_compare_id = for_compare_id[0].id
 
         list_titles = Card.objects.filter(user=self.request.user,
-                                          category=card_object[0].category_id).\
+                                          category=card_object[0].category_id). \
             values_list('title_native_language', flat=True).distinct()
 
         if (title in list_titles) and (self.card_id != for_compare_id):

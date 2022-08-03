@@ -11,8 +11,9 @@
     {% if card.usage_example %}
     <p>Пример применения: {{ card.usage_example }}</p>
     {% endif %}
-    <br>
 
     <a href="{% url 'update_card' card.id %}"><li><button class="btn btn-info">Изменить карточку</button></li></a>
+    <br>
+    <a href="{% url 'delete_card' card.id %}"><li><button class="btn btn-danger">Удалить карточку</button></li></a>
 </div>
 {% endblock %}

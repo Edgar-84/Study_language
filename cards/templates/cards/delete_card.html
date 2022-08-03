@@ -1,0 +1,12 @@
+{% extends "cards/base.html" %}
+
+{% block content %}
+<div class="features">
+    <h1>{{ title }}</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>Вы уверены что хотите удалить карточку: "{{ card_name }}"?</p>
+        <button type="submit" class="btn btn-danger">Удалить</button>
+    </form>
+</div>
+{% endblock %}
