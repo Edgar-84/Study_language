@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from slugify import slugify
+from time import time
 
 
 class Category(models.Model):
@@ -16,7 +17,9 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = '-'.join((slugify(self.title), slugify(str(self.user.username))))
+            self.slug = '-'.join((slugify(self.title),
+                                  slugify(str(self.user.username)),
+                                  slugify(str(int(time())))))
 
         return super(Category, self).save(*args, **kwargs)
 
@@ -49,7 +52,8 @@ class Card(models.Model):
         if not self.slug:
             self.slug = '-'.join((slugify(str(self.user.username)),
                                   slugify(self.title_native_language),
-                                  slugify(str(self.category))))
+                                  slugify(str(self.category)),
+                                  slugify(str(int(time())))))
 
         return super(Card, self).save(*args, **kwargs)
 

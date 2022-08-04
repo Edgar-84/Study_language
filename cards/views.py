@@ -145,6 +145,18 @@ class CategoryUpdateView(DataMixin, LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+class CategoryDeleteView(DataMixin, LoginRequiredMixin, DeleteView):
+    model = Category
+    template_name = 'cards/delete_category.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Удаление категории",
+                                            category_name=Category.objects.get(id=int(self.request.path.split('/')[-2])))
+        return dict(list(context.items()) + list(common_date.items()))
+
+
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
     template_name = 'cards/register.html'
