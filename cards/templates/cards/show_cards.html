@@ -10,5 +10,7 @@
         <p>Перевод: {{ w.translate_studied_language }}</p>
     {% endfor %}
     <a href="{% url 'add_card' category_object.id %}"><li><button class="btn btn-info">Добавить карточку</button></li></a>
+    <br>
+    <a href="{% url 'update_category' category_object.id %}"><li><button class="btn btn-success">Изменить имя списка</button></li></a>
 </div>
 {% endblock %}

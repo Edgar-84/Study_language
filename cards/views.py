@@ -1,7 +1,7 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -113,6 +113,26 @@ class AddCategory(DataMixin, LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         common_date = self.get_user_context(title="Создание списка")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
+
+
+class CategoryUpdateView(DataMixin, LoginRequiredMixin, UpdateView):
+    model = Category
+    form_class = AddCategoryForm
+    template_name = "cards/update_category.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Редактирование карточки")
         return dict(list(context.items()) + list(common_date.items()))
 
     def form_valid(self, form):
