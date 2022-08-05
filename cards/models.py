@@ -16,11 +16,10 @@ class Category(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            unix_timestamp = str(time()).split('.')
-            self.slug = '-'.join((slugify(self.title),
-                                  slugify(str(self.user.username)),
-                                  slugify(unix_timestamp[0] + unix_timestamp[1])))
+        unix_timestamp = str(time()).split('.')
+        self.slug = '-'.join((slugify(self.title),
+                              slugify(str(self.user.username)),
+                              slugify(unix_timestamp[0] + unix_timestamp[1])))
 
         return super(Category, self).save(*args, **kwargs)
 
@@ -50,12 +49,11 @@ class Card(models.Model):
         return self.title_native_language
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            unix_timestamp = str(time()).split('.')
-            self.slug = '-'.join((slugify(str(self.user.username)),
-                                  slugify(self.title_native_language),
-                                  slugify(str(self.category)),
-                                  slugify(unix_timestamp[0] + unix_timestamp[1])))
+        unix_timestamp = str(time()).split('.')
+        self.slug = '-'.join((slugify(str(self.user.username)),
+                              slugify(self.title_native_language),
+                              slugify(str(self.category)),
+                              slugify(unix_timestamp[0] + unix_timestamp[1])))
 
         return super(Card, self).save(*args, **kwargs)
 

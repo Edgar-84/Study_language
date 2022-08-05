@@ -28,6 +28,9 @@ class CardsTests(TestCase):
             translate_studied_language='First test word',
             usage_example='Here we will use first test word',
         )
+        self.client.post(reverse('login'),
+                                   {'username': 'testuser',
+                                    'password': 'unittestpassword123'})
 
     def test_LoginUser(self):
         request = self.client.post(reverse('login'),
@@ -37,6 +40,7 @@ class CardsTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_get_absolute_url(self):
+        """Check generate unique slug"""
         self.assertEqual(self.card.get_absolute_url() in Card.objects.values_list('slug', flat=True), False)
 
     def test_card_content(self):
@@ -47,9 +51,6 @@ class CardsTests(TestCase):
         self.assertEqual(f'{self.card.usage_example}', 'Here we will use first test word')
 
     def test_card_list_view(self):
-        request = self.client.post(reverse('login'),
-                                   {'username': 'testuser',
-                                    'password': 'unittestpassword123'})
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'test_category')
@@ -64,13 +65,6 @@ class CardsTests(TestCase):
         self.assertTemplateUsed(response, 'cards/card_info.html')
 
     def test_card_create_view(self):
-        request = self.client.post(reverse('login'),
-                                   {'username': 'testuser',
-                                    'password': 'unittestpassword123'})
-
-        response = self.client.get(reverse('home'))
-        self.assertEqual(response.status_code, 200)
-
         response = self.client.post(reverse('add_card', args=str(self.category.id)), {
             'title_native_language': 'слово',
             'translate_studied_language': 'перевод',
@@ -90,8 +84,23 @@ class CardsTests(TestCase):
                                         'translate_studied_language': 'измененный перевод',
                                     })
         self.assertEqual(response.status_code, 302)
+        response = self.client.get(response.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'измененное слово')
+        self.assertContains(response, 'измененный перевод')
+
+    def test_card_add_same_card(self):
+        """ checking the addition of cards with the same names """
+
+        response = self.client.post(reverse('add_card', args=str(self.category.id)), {
+            'title_native_language': 'Первое тестовое слово',
+            'translate_studied_language': 'First test word',
+            'usage_example': 'First word'})
+
+        self.assertEqual(response.status_code, 200)
 
     def test_card_delete_view(self):
         response = self.client.post(
             reverse('delete_card', args=str(self.card.id)))
         self.assertEqual(response.status_code, 302)
+
