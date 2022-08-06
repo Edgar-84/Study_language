@@ -104,3 +104,19 @@ class CardsTests(TestCase):
             reverse('delete_card', args=str(self.card.id)))
         self.assertEqual(response.status_code, 302)
 
+    def test_category_create(self):
+        response = self.client.post(reverse('add_category'))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('add_category'), {
+            'title': 'new category',
+        })
+        self.assertEqual(response.status_code, 302)
+
+    def test_category_create_same_category(self):
+        response = self.client.post(
+            reverse('add_category'), {
+                'title': 'test_category',
+            })
+        self.assertEqual(response.status_code, 200)
+
+
