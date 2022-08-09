@@ -153,7 +153,8 @@ class CategoryDeleteView(DataMixin, LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         common_date = self.get_user_context(title="Удаление категории",
-                                            category_name=Category.objects.get(id=int(self.request.path.split('/')[-2])))
+                                            category_name=Category.objects.get(
+                                                id=int(self.request.path.split('/')[-2])))
         return dict(list(context.items()) + list(common_date.items()))
 
 

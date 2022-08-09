@@ -29,8 +29,8 @@ class CardsTests(TestCase):
             usage_example='Here we will use first test word',
         )
         self.client.post(reverse('login'),
-                                   {'username': 'testuser',
-                                    'password': 'unittestpassword123'})
+                         {'username': 'testuser',
+                          'password': 'unittestpassword123'})
 
     def test_LoginUser(self):
         request = self.client.post(reverse('login'),
@@ -118,5 +118,3 @@ class CardsTests(TestCase):
                 'title': 'test_category',
             })
         self.assertEqual(response.status_code, 200)
-
-

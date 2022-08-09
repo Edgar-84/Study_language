@@ -22,4 +22,3 @@ class CardAdmin(admin.ModelAdmin):
     ordering = ('published',)
     list_editable = ('published',)
     prepopulated_fields = {'slug': ('title_native_language', 'user')}
-
