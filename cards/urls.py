@@ -18,4 +18,5 @@ urlpatterns = [
     path('addcard/<slug:cat_id>/', AddCard.as_view(), name='add_card'),
     path('addcategory/', AddCategory.as_view(), name='add_category'),
     path('start_lesson/', show_menu_lesson_view, name='start_lesson'),
+    path('start_lesson/show_menu_review_cards/', show_menu_review_cards, name='show_menu_review_cards'),
 ]

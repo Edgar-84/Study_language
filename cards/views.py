@@ -191,6 +191,10 @@ def show_menu_lesson_view(request):
     return render(request, "cards/show_menu_lesson.html", {'title': 'Выбор занятия', 'menu': menu})
 
 
+def show_menu_review_cards(request):
+    return render(request, "cards/show_menu_review_cards.html", {'title': 'Выбор отображения карточек', 'menu': menu})
+
+
 def logout_user(request):
     logout(request)
     return redirect('login')
