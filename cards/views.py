@@ -187,6 +187,10 @@ class LoginUser(DataMixin, LoginView):
         return reverse_lazy('home')
 
 
+def show_menu_lesson_view(request):
+    return render(request, "cards/show_menu_lesson.html", {'title': 'Выбор занятия', 'menu': menu})
+
+
 def logout_user(request):
     logout(request)
     return redirect('login')
@@ -194,10 +198,6 @@ def logout_user(request):
 
 def about(request):
     return render(request, "cards/about.html", {'title': 'О сайте', 'menu': menu})
-
-
-def start_lesson(request):
-    return HttpResponse('Запуск уроков')
 
 
 def contact(request):
