@@ -17,6 +17,6 @@ urlpatterns = [
     path('category/<slug:cat_slug>/', ShowCategory.as_view(), name='category'),
     path('addcard/<slug:cat_id>/', AddCard.as_view(), name='add_card'),
     path('addcategory/', AddCategory.as_view(), name='add_category'),
-    path('start_lesson/', show_menu_lesson_view, name='start_lesson'),
-    path('start_lesson/show_menu_review_cards/', show_menu_review_cards, name='show_menu_review_cards'),
+    path('show_menu/', show_menu_lesson_view, name='show_menu'),
+    path('show_menu/review_cards/', show_menu_review_cards, name='show_menu_review_cards'),
 ]
