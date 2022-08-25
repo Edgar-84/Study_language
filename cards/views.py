@@ -187,12 +187,40 @@ class LoginUser(DataMixin, LoginView):
         return reverse_lazy('home')
 
 
+class StartFirstLessonView(DataMixin, DetailView):
+    model = Card
+    template_name = "cards/start_first_lesson.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Занятие 1")
+        return dict(list(context.items()) + list(common_date.items()))
+
+
+class ShowSelectCategoryView(DataMixin, LoginRequiredMixin, ListView):
+    model = Category
+    template_name = "cards/select_category_lesson.html"
+    login_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title="Выбор списка для занятия")
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def get_queryset(self):
+        return Category.objects.filter(user=self.request.user)
+
+
 def show_menu_lesson_view(request):
-    return render(request, "cards/show_menu_lesson.html", {'title': 'Выбор занятия', 'menu': menu})
+    return render(request, "cards/show_menu_lesson.html",
+                  {'title': 'Выбор занятия',
+                   'menu': menu})
 
 
-def show_menu_review_cards(request):
-    return render(request, "cards/show_menu_review_cards.html", {'title': 'Выбор отображения карточек', 'menu': menu})
+def select_language_review_lesson(request, pk):
+    return render(request, "cards/show_menu_review_cards.html",
+                  {'title': 'Выбор отображения карточек',
+                   'menu': menu})
 
 
 def logout_user(request):
