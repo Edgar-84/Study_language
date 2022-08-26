@@ -20,4 +20,5 @@ urlpatterns = [
     path('show_menu/', show_menu_lesson_view, name='show_menu'),
     path('show_menu/select_category/', ShowSelectCategoryView.as_view(), name='select_category_lesson'),
     path('show_menu/review_cards_language/<int:pk>/', select_language_review_lesson, name='select_language_review'),
+    path('first_lesson/<int:cat_pk>/<int:type_pk>/', FirstLessonView.as_view(), name='first_lesson'),
 ]

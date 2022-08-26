@@ -187,14 +187,14 @@ class LoginUser(DataMixin, LoginView):
         return reverse_lazy('home')
 
 
-class StartFirstLessonView(DataMixin, DetailView):
-    model = Card
-    template_name = "cards/start_first_lesson.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        common_date = self.get_user_context(title="Занятие 1")
-        return dict(list(context.items()) + list(common_date.items()))
+# class StartFirstLessonView(DataMixin, DetailView):
+#     model = Card
+#     template_name = "cards/start_first_lesson.html"
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         common_date = self.get_user_context(title="Занятие 1")
+#         return dict(list(context.items()) + list(common_date.items()))
 
 
 class ShowSelectCategoryView(DataMixin, LoginRequiredMixin, ListView):
@@ -211,6 +211,22 @@ class ShowSelectCategoryView(DataMixin, LoginRequiredMixin, ListView):
         return Category.objects.filter(user=self.request.user)
 
 
+class FirstLessonView(DataMixin, ListView, LoginRequiredMixin):
+    paginate_by = 1
+    model = Card
+    template_name = "cards/first_lesson.html"
+    context_object_name = 'cards'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        common_date = self.get_user_context(title='Занятие №1')
+
+        return dict(list(context.items()) + list(common_date.items()))
+
+    def get_queryset(self):
+        return Card.objects.filter(category_id=int(self.request.path.split('/')[-3]))
+
+
 def show_menu_lesson_view(request):
     return render(request, "cards/show_menu_lesson.html",
                   {'title': 'Выбор занятия',
@@ -220,6 +236,7 @@ def show_menu_lesson_view(request):
 def select_language_review_lesson(request, pk):
     return render(request, "cards/show_menu_review_cards.html",
                   {'title': 'Выбор отображения карточек',
+                   'cat_id': int(request.path.split('/')[-2]),
                    'menu': menu})
 
 
