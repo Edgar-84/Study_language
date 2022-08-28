@@ -1,0 +1,32 @@
+{% extends "cards/base.html" %}
+
+{% block content %}
+
+<div class="features">
+    {{ title }}
+
+    {% for card in cards %}
+        {% if type_translate == 0 %}
+            <p>{{ card.title_native_language }}</p>
+               {{ card.translate_studied_language }}<br>
+        {% else %}
+            <p>{{ card.translate_studied_language }}</p>
+            {{ card.title_native_language }}<br>
+
+        {% endif %}
+    {% endfor %}
+<nav class="list-pages">
+    <ul>
+        {% for p in paginator.page_range %}
+        {% if page.obj.number == p %}
+        <li class="page-num page-num-selected">{{ p }}</li>
+        {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+        <li class="page-num">
+            <a href="?page={{ p }}">{{ p }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+</div>
+{% endblock %}

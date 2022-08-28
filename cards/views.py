@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
@@ -219,12 +221,15 @@ class FirstLessonView(DataMixin, ListView, LoginRequiredMixin):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        common_date = self.get_user_context(title='Занятие №1')
+        common_date = self.get_user_context(title='Занятие №1',
+                                            type_translate=int(self.request.path.split('/')[-2]))
 
         return dict(list(context.items()) + list(common_date.items()))
 
     def get_queryset(self):
-        return Card.objects.filter(category_id=int(self.request.path.split('/')[-3]))
+        items = Card.objects.filter(category_id=int(self.request.path.split('/')[-3]))
+
+        return items
 
 
 def show_menu_lesson_view(request):
