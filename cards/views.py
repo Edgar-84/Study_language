@@ -189,16 +189,6 @@ class LoginUser(DataMixin, LoginView):
         return reverse_lazy('home')
 
 
-# class StartFirstLessonView(DataMixin, DetailView):
-#     model = Card
-#     template_name = "cards/start_first_lesson.html"
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         common_date = self.get_user_context(title="Занятие 1")
-#         return dict(list(context.items()) + list(common_date.items()))
-
-
 class ShowSelectCategoryView(DataMixin, LoginRequiredMixin, ListView):
     model = Category
     template_name = "cards/select_category_lesson.html"
@@ -227,9 +217,7 @@ class FirstLessonView(DataMixin, ListView, LoginRequiredMixin):
         return dict(list(context.items()) + list(common_date.items()))
 
     def get_queryset(self):
-        items = Card.objects.filter(category_id=int(self.request.path.split('/')[-3]))
-
-        return items
+        return Card.objects.filter(category_id=int(self.request.path.split('/')[-3])).order_by('time_update')
 
 
 def show_menu_lesson_view(request):

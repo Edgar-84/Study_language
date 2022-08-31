@@ -15,18 +15,17 @@
 
         {% endif %}
     {% endfor %}
-<nav class="list-pages">
-    <ul>
-        {% for p in paginator.page_range %}
-        {% if page.obj.number == p %}
-        <li class="page-num page-num-selected">{{ p }}</li>
-        {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
-        <li class="page-num">
-            <a href="?page={{ p }}">{{ p }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-</nav>
+
+<p>Current Card: <b>{{page_obj.number}}</b></p>
+
+<ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}"><<<</a></li>
+    {% endif%}
+    {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">>>></a></li>
+    {% endif%}
+</ul>
+
 </div>
 {% endblock %}
