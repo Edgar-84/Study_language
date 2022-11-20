@@ -5,13 +5,13 @@
     <div class="card text-center bg-secondary text-warning" style="width: 18rem; margin: 0 auto;
      text-align: center; ">
     {% if card.photo %}
-        <img class="mx-auto mb-3 d-block" src="{{ card.photo.url }}" alt="...">
+        <img class="mx-auto mb-3 d-block" src="{{ card.photo.url }}" width="300px">
     {% endif %}
         <div class="card-body">
             <h4 class="card-title">Название:</h4>
-            <h5 class="card-title">{{ card.title_native_language }}</h5><br>
+            <h6 class="card-title">{{ card.title_native_language }}</h6><br>
             <h4 class="card-subtitle mb-2 ">Перевод:</h4>
-            <h5 class="card-subtitle mb-2 ">{{ card.translate_studied_language }}</h5>
+            <h6 class="card-subtitle mb-2 ">{{ card.translate_studied_language }}</h6>
             {% if card.usage_example %}
                 <p class="card-text">Пример применения: {{ card.usage_example }}</p>
             {% endif %}

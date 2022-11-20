@@ -204,7 +204,6 @@ class ShowSelectCategoryView(DataMixin, LoginRequiredMixin, ListView):
 
 
 class FirstLessonView(DataMixin, ListView, LoginRequiredMixin):
-    paginate_by = 1
     model = Card
     template_name = "cards/first_lesson.html"
     context_object_name = 'cards'
@@ -217,7 +216,7 @@ class FirstLessonView(DataMixin, ListView, LoginRequiredMixin):
         return dict(list(context.items()) + list(common_date.items()))
 
     def get_queryset(self):
-        return Card.objects.filter(category_id=int(self.request.path.split('/')[-3])).order_by('time_update')
+        return Card.objects.filter(category_id=int(self.request.path.split('/')[-3])).order_by('?')
 
 
 def show_menu_lesson_view(request):
@@ -231,6 +230,17 @@ def select_language_review_lesson(request, pk):
                   {'title': 'Выбор отображения карточек',
                    'cat_id': int(request.path.split('/')[-2]),
                    'menu': menu})
+
+
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = DocumentForm()
+    return render(request, 'cards/upload_xlsx_file.html', {'form': form})
 
 
 def logout_user(request):

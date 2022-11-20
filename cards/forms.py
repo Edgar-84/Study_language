@@ -5,6 +5,12 @@ from django.core.exceptions import ValidationError
 from .models import *
 
 
+class DocumentForm(forms.ModelForm):
+    class Meta:
+        model = Document
+        fields = ('document',)
+
+
 class AddCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")

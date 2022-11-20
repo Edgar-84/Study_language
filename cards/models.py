@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from slugify import slugify
 from time import time
+from .service import validate_file_extension
 
 
 class Category(models.Model):
@@ -64,3 +65,8 @@ class Card(models.Model):
         verbose_name = "Card"
         verbose_name_plural = "Cards"
         ordering = ['time_create', 'title_native_language']
+
+
+class Document(models.Model):
+    document = models.FileField(upload_to='documents/%Y/%m/%d/', validators=[validate_file_extension])
+    uploaded_at = models.DateTimeField(auto_now_add=True)

@@ -32,8 +32,46 @@
     </aside>
 {% endblock mainmenu %}
 <main>
-    {% block content %}
+    {% block content %}{% endblock %}
+
+    {% block js %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+        <script type="text/javascript">
+            function ajaxPagination() {
+                $('#pagination a.page-link').each((index, el) => {
+                    $(el).click((e) => {
+                        e.preventDefault()
+                        let page_url = $(el).attr('href')
+
+                        $.ajax({
+                            url: page_url,
+                            type: 'GET',
+                            success: (data) => {
+                                $('#list-cards').empty()
+                                $('#list-cards').append( $(data).find('#list-cards').html() )
+
+                                $('#pagination').empty()
+                                $('#pagination').append( $(data).find('#pagination').html() )
+                            }
+
+                        })
+                    })
+                })
+            }
+
+            $(document).ready(function () {
+                ajaxPagination()
+            })
+
+            $(document).ajaxStop(function () {
+                ajaxPagination()
+            })
+        </script>
+
     {% endblock %}
+
 </main>
 </body>
 </html>

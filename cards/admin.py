@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Card, Category
+from .models import Card, Category, Document
 
 
 @admin.register(Category)
@@ -22,3 +22,8 @@ class CardAdmin(admin.ModelAdmin):
     ordering = ('published',)
     list_editable = ('published',)
     prepopulated_fields = {'slug': ('title_native_language', 'user')}
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ('document', 'uploaded_at')
