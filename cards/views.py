@@ -10,6 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from .forms import *
 from .utils import *
+from .service import get_user_wordlist, create_slug
 
 
 class CardsHome(LoginRequiredMixin, DataMixin, ListView):
@@ -75,7 +76,6 @@ class AddCard(DataMixin, LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.category = Category.objects.get(id=int(self.request.path.split('/')[-2]))
-        print('form valid')
         return super().form_valid(form)
 
 
@@ -232,11 +232,22 @@ def select_language_review_lesson(request, pk):
                    'menu': menu})
 
 
-def model_form_upload(request):
+def model_form_upload(request, cat_id):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        if form.is_valid():        # TODO design validation without model
+            file = form.files['document']
+            words = get_user_wordlist(file)
+
+            category_name = Category.objects.get(id=cat_id).title
+            Card.objects.bulk_create(
+                [Card(title_native_language=file['word'],
+                      translate_studied_language=file['translate'],
+                      usage_example=file['description'],
+                      category_id=cat_id,
+                      user_id=request.user.id,
+                      slug=create_slug(request.user, file['word'], category_name)) for file in words])
+
             return redirect('home')
     else:
         form = DocumentForm()

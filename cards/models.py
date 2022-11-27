@@ -51,12 +51,16 @@ class Card(models.Model):
 
     def save(self, *args, **kwargs):
         unix_timestamp = str(time()).split('.')
-        self.slug = '-'.join((slugify(str(self.user.username)),
-                              slugify(self.title_native_language),
-                              slugify(str(self.category)),
-                              slugify(unix_timestamp[0] + unix_timestamp[1])))
+        print(f"before save {self.slug}")
+        if self.slug:
+            return super(Card, self).save(*args, **kwargs)
+        else:
+            self.slug = '-'.join((slugify(str(self.user.username)),
+                                  slugify(self.title_native_language),
+                                  slugify(str(self.category)),
+                                  slugify(unix_timestamp[0] + unix_timestamp[1])))
 
-        return super(Card, self).save(*args, **kwargs)
+            return super(Card, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('card', kwargs={'card_slug': self.slug})

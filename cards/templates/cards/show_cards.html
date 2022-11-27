@@ -5,6 +5,11 @@
     <h1>{{ category_object.title }}</h1>
     <h6>Всего: {{ cards.count }} карточек</h6>
 
+    <a href="{% url 'add_card' category_object.id %}"><li><button class="btn btn-info">Добавить карточку</button></li></a><br>
+    <a href="{% url 'model_form_upload' category_object.id %}"><li><button class="btn btn-info">Download file with words</button></li></a><br>
+    <a href="{% url 'update_category' category_object.id %}"><li><button class="btn btn-success">Изменить имя списка</button></li></a><br>
+    <a href="{% url 'delete_category' category_object.id %}"><li><button class="btn btn-danger">Удалить список</button></li></a>
+
     <table class="table table-dark table-striped table-hover">
         <thread>
             <tr>
@@ -29,9 +34,5 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <a href="{% url 'add_card' category_object.id %}"><li><button class="btn btn-info">Добавить карточку</button></li></a><br>
-    <a href="{% url 'update_category' category_object.id %}"><li><button class="btn btn-success">Изменить имя списка</button></li></a><br>
-    <a href="{% url 'delete_category' category_object.id %}"><li><button class="btn btn-danger">Удалить список</button></li></a>
 </div>
 {% endblock %}
