@@ -54,6 +54,33 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'myformatter': {
+            'format': '{levelname} - {asctime} - {module} - {process:d} - {thread:d} - {filename} - {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'myformatter',
+            'filename': 'information.log',
+        },
+    },
+    'loggers': {
+        'cards': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [

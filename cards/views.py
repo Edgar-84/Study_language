@@ -1,4 +1,4 @@
-import random
+import logging
 
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +11,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .forms import *
 from .utils import *
 from .service import get_user_wordlist, create_slug
+
+
+logger = logging.getLogger(__name__)
 
 
 class CardsHome(LoginRequiredMixin, DataMixin, ListView):
