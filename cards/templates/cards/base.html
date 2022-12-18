@@ -22,8 +22,10 @@
                 <a href="{% url m.url_name %}"><li><i class="bi bi-x-diamond-fill"></i>{{m.title}}</li></a>
             {% endfor %}
             {% if request.user.is_authenticated %}
-                <li><i class="bi bi-x-diamond-fill"></i>{{ user.username }}</li> | <a href="{% url 'logout' %}"><li><i class="bi bi-x-diamond-fill"></i>Выйти</li></a>
+                <br>
+                <li><i class="bi bi-x-diamond-fill"></i>{{ user.username }}</li><a href="{% url 'logout' %}"><li><i class="bi bi-x-diamond-fill"></i>Выйти</li></a>
             {% else %}
+            <br>
             <a href="{% url 'register' %}"><li><i class="bi bi-x-diamond-fill"></i>Регистрация</li></a>
             <a href="{% url 'login' %}"><li><i class="bi bi-x-diamond-fill"></i>Войти</li></a>
             {% endif %}

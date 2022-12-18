@@ -1,10 +1,14 @@
 import os
+import logging
 from time import time
 from openpyxl import load_workbook
 
 from slugify import slugify
 
 from django.core.exceptions import ValidationError
+
+
+logger = logging.getLogger(__name__)
 
 
 def create_slug(user: str, title: str, category: str):
@@ -55,13 +59,13 @@ def get_user_wordlist(path: str) -> list:
         try:
             word = sheet[row][0].value
             translate = sheet[row][1].value
-        except Exception as ex:   # TODO add logger
-            print(f'Mistake with word - translate: {ex}')
+        except Exception as ex:
+            logger.warning(f'Mistake with word - translate: {ex}')
             continue
         try:
             description = sheet[row][2].value
         except Exception as ex:
-            print(f'Mistake with description: {ex}')
+            logger.warning(f'Mistake with description: {ex}')
             description = ''
 
         if word is None or translate is None:
